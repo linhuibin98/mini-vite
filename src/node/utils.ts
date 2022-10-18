@@ -29,3 +29,7 @@ export function isJSRequest(id: string): boolean {
   }
   return false;
 }
+
+export function isCSSRequest(id: string) {
+  return cleanUrl(id).endsWith('.css');
+}

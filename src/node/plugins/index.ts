@@ -1,6 +1,8 @@
 import { esbuildTransformPlugin } from "./esbuild";
 import { importAnalysisPlugin } from "./importAnalysis";
 import { resolvePlugin } from "./resolve";
+import { cssPlugin } from "./css";
+
 import { Plugin } from "../plugin";
 
 export function resolvePlugins(): Plugin[] {
@@ -8,6 +10,7 @@ export function resolvePlugins(): Plugin[] {
   return [
     resolvePlugin(),
     esbuildTransformPlugin(),
-    importAnalysisPlugin()
+    importAnalysisPlugin(),
+    cssPlugin(),
   ];
 }

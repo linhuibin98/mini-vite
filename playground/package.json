@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "mvite dev"
+    "dev": "mvite dev",
+    "vite:dev": "vite dev"
   },
   "keywords": [],
   "author": "",
@@ -12,7 +13,8 @@
   "devDependencies": {
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
-    "mini-vite": "../"
+    "mini-vite": "../",
+    "vite": "^3.1.8"
   },
   "dependencies": {
     "react": "^18.2.0",

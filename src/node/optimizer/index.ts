@@ -30,6 +30,7 @@ export async function optimize(root: string) {
         bundle: true,
         format: 'esm',
         splitting: true,
+        sourcemap: true,
         outdir: path.resolve(root, PRE_BUNDLE_DIR),
         plugins: [preBundlePlugin(deps)],
     })

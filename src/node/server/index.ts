@@ -8,6 +8,7 @@ import {resolvePlugins} from '../plugins';
 import {createPluginContainer, PluginContainer} from '../pluginContainer';
 import {Plugin} from '../plugin';
 import { indexHtmlMiddleware } from "./middlewares/indexHtml";
+import { transformMiddleware } from "./middlewares/transform";
 
 // 服务器上下文类型
 export interface ServerContext {
@@ -37,8 +38,14 @@ export async function startDevServer() {
         }
     }
 
+    app.use((req, res, next) => {
+        console.log('收到请求', req.method, req.url);
+        next();
+    });
     // 处理入口 HTML 资源
     app.use(indexHtmlMiddleware(serverContext));
+    // transform
+    app.use(transformMiddleware(serverContext));
 
     app.listen(3000, async () => {
         await optimize(root);

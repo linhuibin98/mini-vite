@@ -15,6 +15,7 @@ export function resolvePlugin(): Plugin {
             serverContext = s;
         },
         async resolveId(id, importer) {
+            id = cleanUrl(id);
             // 1. 绝对路径
             if (path.isAbsolute(id)) {
                 if (await pathExists(id)) {

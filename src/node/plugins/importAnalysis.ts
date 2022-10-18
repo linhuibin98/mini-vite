@@ -36,6 +36,17 @@ export function importAnalysisPlugin(): Plugin {
                 // str.slice(s, e) => 'react'
                 const { s: modStart, e: modEnd, n: modSource } = importInfo;
                 if (!modSource) continue;
+
+                // 静态资源
+                if (modSource.endsWith('.png')) {
+                    // 加上 ?import 后缀
+                    const resolvedUrl = slash(path.join('/', path.relative(serverContext.root, path.join(path.dirname(id), modSource))));
+                    console.log('id',id);
+                    console.log('modSource',modSource);
+                    ms.overwrite(modStart, modEnd, `${resolvedUrl}?import`);
+                    continue;
+                }
+
                 // 第三方库: 路径重写到预构建产物的路径
                 if (BARE_IMPORT_RE.test(modSource)) {
                     const bundlePath = slash(path.join(

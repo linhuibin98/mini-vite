@@ -33,3 +33,7 @@ export function isJSRequest(id: string): boolean {
 export function isCSSRequest(id: string) {
   return cleanUrl(id).endsWith('.css');
 }
+
+export function isImportRequest(url: string): boolean {
+  return url.endsWith("?import");
+}

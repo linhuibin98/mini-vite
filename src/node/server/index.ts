@@ -9,6 +9,7 @@ import {createPluginContainer, PluginContainer} from '../pluginContainer';
 import {Plugin} from '../plugin';
 import { indexHtmlMiddleware } from "./middlewares/indexHtml";
 import { transformMiddleware } from "./middlewares/transform";
+import { staticMiddleware } from "./middlewares/static";
 
 // 服务器上下文类型
 export interface ServerContext {
@@ -46,6 +47,8 @@ export async function startDevServer() {
     app.use(indexHtmlMiddleware(serverContext));
     // transform
     app.use(transformMiddleware(serverContext));
+    // static 服务
+    app.use(staticMiddleware(serverContext));
 
     app.listen(3000, async () => {
         await optimize(root);

@@ -1,7 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import logo from './logo.png';
 
 import './index.css';
 
-console.log('React',React);
-ReactDOM.render(<div className='app'>Text</div>, document.querySelector('#app'));
+function App() {
+    return (
+        <div className='app'>
+            <h1>Hi, Vite</h1>
+            <p><img className="app-logo" src={logo} alt="logo" /></p>
+        </div>
+    );
+}
+ReactDOM.render(App(), document.querySelector('#app'));

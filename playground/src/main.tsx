@@ -7,9 +7,14 @@ import './index.css';
 function App() {
     return (
         <div className='app'>
-            <h1>Hi, Vite</h1>
+            <h1>Hi, Vite2</h1>
             <p><img className="app-logo" src={logo} alt="logo" /></p>
         </div>
     );
 }
-ReactDOM.render(App(), document.querySelector('#app'));
+ReactDOM.render(<App />, document.querySelector('#app'));
+ 
+// @ts-ignore
+import.meta.hot.accept(() => {
+    ReactDOM.render(<App />, document.querySelector('#app'));
+});

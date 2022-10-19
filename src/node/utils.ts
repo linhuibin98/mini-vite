@@ -1,6 +1,8 @@
 import os from 'os';
 import path from 'path';
-import { JS_TYPES_RE, HASH_RE, QUERY_RE } from './constants';
+import { JS_TYPES_RE, HASH_RE, QUERY_RE, CLIENT_PUBLIC_PATH } from './constants';
+
+const INTERNAL_LIST = [CLIENT_PUBLIC_PATH, "/@react-refresh"];
 
 export function slash(p: string): string {
   return p.replace(/\\/g, '/')
@@ -39,5 +41,17 @@ export function isImportRequest(url: string): boolean {
 }
 
 export function getShortName(file: string, root: string) {
-  return file.startsWith(root + "/") ? path.posix.relative(root, file) : file;
+  return file.startsWith(root + path.sep) ? path.relative(root, file) : file;
+}
+
+export function getRelativePath(file: string, root: string) {
+  return slash(path.join('/', getShortName(file, root)));
+}
+
+export function isInternalRequest(url: string): boolean {
+  return INTERNAL_LIST.includes(url);
+}
+
+export function removeImportQuery(url: string): string {
+  return url.replace(/\?import$/, "");
 }

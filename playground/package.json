@@ -14,6 +14,7 @@
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
     "mini-vite": "../",
+    "typescript": "^4.8.4",
     "vite": "^3.1.8"
   },
   "dependencies": {

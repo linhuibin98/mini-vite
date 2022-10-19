@@ -1,6 +1,7 @@
 import { ServerContext } from "./server/index";
 import { blue, green } from "picocolors";
-import { getShortName } from "./utils";
+import { getShortName, slash } from "./utils";
+import path from "path";
 
 export function bindingHMREvents(serverContext: ServerContext) {
     const {root, ws, watcher} = serverContext;
@@ -17,8 +18,8 @@ export function bindingHMREvents(serverContext: ServerContext) {
                 {
                     type: 'js-update',
                     timestamp: Date.now(),
-                    path: '/' + getShortName(filePath, root),
-                    acceptedPath: "/" + getShortName(filePath, root),
+                    path: slash(path.join('/', getShortName(filePath, root))),
+                    acceptedPath: slash(path.join('/', getShortName(filePath, root))),
                 }
             ],
         });

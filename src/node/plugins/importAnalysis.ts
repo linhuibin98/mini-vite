@@ -31,6 +31,9 @@ export function importAnalysisPlugin(): Plugin {
             const [imports] = parse(code);
             const ms = new MagicString(code);
              // 对每一个 import 语句依次进行分析
+             const {moduleGraph} = serverContext;
+             const curMod = moduleGraph.getModuleById(id)!;
+             const importedModules = new Set<string>();
              for (const importInfo of imports) {
                 // 举例说明: const str = `import React from 'react'`
                 // str.slice(s, e) => 'react'
@@ -55,14 +58,19 @@ export function importAnalysisPlugin(): Plugin {
                         `${modSource}.js`
                     ));
                     ms.overwrite(modStart, modEnd, bundlePath);
+                    importedModules.add(bundlePath);
                 } else if (modSource.startsWith(".") || modSource.startsWith("/")) {
                      // 直接调用插件上下文的 resolve 方法，会自动经过路径解析插件的处理
                     const resolved = await this.resolve(modSource, id);
                     if (resolved) {
                         ms.overwrite(modStart, modEnd, resolved.id);
+                        importedModules.add(resolved.id);
                     }
                 }
              }
+
+             moduleGraph.updateModuleInfo(curMod, importedModules);
+
              return {
                 code: ms.toString(),
                 // 生成 SourceMap

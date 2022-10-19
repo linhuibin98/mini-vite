@@ -6,8 +6,14 @@ import createDebug from 'debug';
 const debug = createDebug('dev');
 
 export async function transformRequest(url: string, serverContext: ServerContext) {
-    const {pluginContainer} = serverContext;
+    const {pluginContainer, moduleGraph} = serverContext;
     url = cleanUrl(url);
+    // 从缓存拿 transformResult
+    const mod = await moduleGraph.getModuleByUrl(url);
+    if (mod && mod.transformResult) {
+        return mod.transformResult;
+    }
+
     // 简单来说，就是依次调用插件容器的 resolveId、load、transform 方法
     const resolveResult = await pluginContainer.resolveId(url);
     let transformResult;
@@ -16,10 +22,18 @@ export async function transformRequest(url: string, serverContext: ServerContext
         if (typeof code === 'object' && code !== null) {
             code = code.code;
         }
+        // 初始化模块
+        await moduleGraph.ensureEntryFromUrl(url);
         if (code) {
             transformResult = await pluginContainer.transform(code, resolveResult.id);
         }
     }
+
+    // 缓存 transformResult
+    if (mod) {
+        mod.transformResult = transformResult;
+    }
+    
     return transformResult;
 }
 

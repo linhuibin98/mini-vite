@@ -37,3 +37,7 @@ export function isCSSRequest(id: string) {
 export function isImportRequest(url: string): boolean {
   return url.endsWith("?import");
 }
+
+export function getShortName(file: string, root: string) {
+  return file.startsWith(root + "/") ? path.posix.relative(root, file) : file;
+}

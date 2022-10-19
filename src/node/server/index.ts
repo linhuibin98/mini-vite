@@ -10,28 +10,49 @@ import {Plugin} from '../plugin';
 import { indexHtmlMiddleware } from "./middlewares/indexHtml";
 import { transformMiddleware } from "./middlewares/transform";
 import { staticMiddleware } from "./middlewares/static";
+import { ModuleGraph } from '../ModuleGraph';
+import chokidar, { FSWatcher } from "chokidar";
+import { createWebSocketServer, WebSocketServerInstance } from '../ws';
+import { bindingHMREvents } from "../hmr";
 
 // 服务器上下文类型
 export interface ServerContext {
     root: string;
     pluginContainer: PluginContainer;
     app: connect.Server,
-    plugins: Plugin[]
+    plugins: Plugin[],
+    moduleGraph: ModuleGraph,
+    watcher: FSWatcher,
+    ws: WebSocketServerInstance,
 }
 
 export async function startDevServer() {
+    // 初始化 http 服务
     const app = connect();
     const root = process.cwd();
     const startTime = Date.now();
     const plugins = resolvePlugins();
     const pluginContainer = createPluginContainer(plugins);
+    const moduleGraph = new ModuleGraph((url) => pluginContainer.resolveId(url));
+    // 初始化文件监听
+    const watcher = chokidar.watch(root, {
+        ignored: ["**/node_modules/**", "**/.git/**"],
+        ignoreInitial: true,
+    });
+    // 初始化 websocket 服务
+    const ws = createWebSocketServer(app);
 
     const serverContext: ServerContext = {
         root,
         app,
         pluginContainer,
-        plugins
+        plugins,
+        moduleGraph,
+        watcher,
+        ws
     };
+
+    bindingHMREvents(serverContext);
 
     for (const plugin of plugins) {
         if (plugin.configureServer) {

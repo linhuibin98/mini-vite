@@ -1,7 +1,7 @@
 
 
 import path from 'path';
-import {Plugin} from '../plugin'
+import {Plugin} from '../plugin';
 import { ServerContext } from '../server';
 import { cleanUrl, slash } from '../utils';
 
